@@ -1,0 +1,59 @@
+# Giao diện chính
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Shop</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('cart') }}">Cart ({{ session['cart']|length if session['cart'] else 0 }})</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
+
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Products</h1>
+<ul>
+    {% for product in products %}
+    <li>
+        <a href="{{ url_for('product', id=product.id) }}">
+            {{ product.name }} - {{ product.price }}$
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+<p>{{ product.description }}</p>
+<p>{{ product.price }}$</p>
+<a href="{{ url_for('add_to_cart', id=product.id) }}">Add to Cart</a>
+{% endblock %}
+
+
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Your Cart</h1>
+<ul>
+    {% for item in cart_items %}
+    <li>{{ item.name }} - {{ item.price }}$</li>
+    {% endfor %}
+</ul>
+<p>Total: {{ cart_items|sum(attribute='price') }}$</p>
+{% endblock %}
